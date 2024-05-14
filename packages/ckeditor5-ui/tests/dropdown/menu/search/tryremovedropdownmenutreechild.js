@@ -42,9 +42,9 @@ describe( 'tryRemoveDropdownMenuTreeChild', () => {
 		} ).not.to.throw();
 	} );
 
-	it( 'should do do nothing on unknown entry', () => {
+	it( 'should throw on unknown entry', () => {
 		expect( () => {
 			tryRemoveDropdownMenuTreeChild( {}, null );
-		} ).not.to.throw();
+		} ).to.throw();
 	} );
 } );

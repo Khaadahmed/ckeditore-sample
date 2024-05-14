@@ -36,7 +36,7 @@ export function tryRemoveDropdownMenuTreeChild<P extends DropdownMenusViewsTreeN
 
 		default: {
 			const unknownNode: never = parent;
-			console.warn( 'Unknown node kind!', unknownNode );
+			throw new Error( `Unknown node kind! ${ unknownNode }` );
 		}
 	}
 
