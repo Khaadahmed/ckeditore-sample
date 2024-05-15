@@ -89,9 +89,10 @@ export class DropdownMenuDefinitionParser {
 				);
 			} );
 
-			const maybeSeparator = index !== groups.length - 1 ? [ new ListSeparatorView( locale ) ] : [];
-
-			return [ ...menuItems, ...maybeSeparator ];
+			return [
+				...menuItems,
+				...index !== groups.length - 1 ? [ new ListSeparatorView( locale ) ] : []
+			];
 		} );
 
 		if ( items.length ) {
