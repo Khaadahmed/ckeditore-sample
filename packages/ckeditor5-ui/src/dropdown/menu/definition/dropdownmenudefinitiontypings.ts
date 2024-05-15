@@ -8,7 +8,7 @@
  */
 
 import type { NonEmptyArray } from '@ckeditor/ckeditor5-core';
-import type { DropdownMenuOrFlatItemView } from '../typings';
+import type { DropdownMenuOrFlatItemView } from '../typings.js';
 
 /**
  * Represents the definition of a dropdown menu group.
