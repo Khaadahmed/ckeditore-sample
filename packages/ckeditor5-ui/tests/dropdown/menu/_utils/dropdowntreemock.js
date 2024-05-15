@@ -6,8 +6,10 @@
 import DropdownMenuListItemButtonView from '../../../../src/dropdown/menu/dropdownmenulistitembuttonview.js';
 import DropdownMenuRootListView from '../../../../src/dropdown/menu/dropdownmenurootlistview.js';
 
+export const createMockLocale = () => ( { t() {} } );
+
 export function createBlankRootListView() {
-	const locale = { t() {} };
+	const locale = createMockLocale();
 
 	return {
 		locale,
@@ -15,26 +17,32 @@ export function createBlankRootListView() {
 	};
 }
 
+export function createMockMenuDefinition() {
+	const locale = createMockLocale();
+
+	return {
+		label: 'Menu 1',
+		groups: [
+			{
+				items: [
+					new DropdownMenuListItemButtonView( locale, 'Foo' ),
+					new DropdownMenuListItemButtonView( locale, 'Bar' )
+				]
+			},
+			{
+				items: [
+					new DropdownMenuListItemButtonView( locale, 'Buz' )
+				]
+			}
+		]
+	};
+}
+
 export function createMockDropdownMenuDefinition() {
 	const { locale, menuRootList } = createBlankRootListView();
 
 	const menusDefinitions = [
-		{
-			label: 'Menu 1',
-			groups: [
-				{
-					items: [
-						new DropdownMenuListItemButtonView( locale, 'Foo' ),
-						new DropdownMenuListItemButtonView( locale, 'Bar' )
-					]
-				},
-				{
-					items: [
-						new DropdownMenuListItemButtonView( locale, 'Buz' )
-					]
-				}
-			]
-		},
+		createMockMenuDefinition(),
 		{
 			label: 'Menu 2',
 			groups: [

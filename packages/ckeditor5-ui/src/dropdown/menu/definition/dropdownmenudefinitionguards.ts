@@ -16,4 +16,4 @@ import type { DropdownMenuDefinition } from './dropdownmenudefinitiontypings.js'
  * @returns A boolean indicating whether the object is a valid DropdownMenuDefinition.
  */
 export const isDropdownMenuDefinition = ( obj: any ): obj is DropdownMenuDefinition =>
-	obj && 'label' in obj && 'groups' in obj;
+	!!obj && typeof obj === 'object' && 'label' in obj && 'groups' in obj;
