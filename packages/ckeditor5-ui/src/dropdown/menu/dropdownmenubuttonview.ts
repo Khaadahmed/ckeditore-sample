@@ -18,7 +18,7 @@ import '../../../theme/components/dropdown/menu/dropdownmenubutton.css';
 /**
  * Represents a view for a dropdown menu button.
  */
-export class DropdownMenuButtonView extends ButtonView {
+export default class DropdownMenuButtonView extends ButtonView {
 	/**
 	 * An icon that displays an arrow to indicate a direction of the menu.
 	 */

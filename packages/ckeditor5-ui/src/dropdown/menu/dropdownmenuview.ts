@@ -19,7 +19,7 @@ import {
 import type { FocusableView } from '../../focuscycler.js';
 import type { DropdownNestedMenuListItemView } from './typings.js';
 
-import { DropdownMenuButtonView } from './dropdownmenubuttonview.js';
+import DropdownMenuButtonView from './dropdownmenubuttonview.js';
 import { DropdownMenuViewPanelPositioningFunctions } from './utils/dropdownmenupositioningfunctions.js';
 import { DropdownMenuBehaviors } from './utils/dropdownmenubehaviors.js';
 
