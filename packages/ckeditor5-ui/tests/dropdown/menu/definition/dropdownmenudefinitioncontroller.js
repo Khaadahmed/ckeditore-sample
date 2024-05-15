@@ -6,8 +6,9 @@
 import { DropdownMenuDefinitionController } from '../../../../src/dropdown/menu/definition/dropdownmenudefinitioncontroller.js';
 import DropdownMenuRootListView from '../../../../src/dropdown/menu/dropdownmenurootlistview.js';
 import DropdownMenuListItemButtonView from '../../../../src/dropdown/menu/dropdownmenulistitembuttonview.js';
+import DropdownMenuView from '../../../../src/dropdown/menu/dropdownmenuview.js';
 
-import { createMockLocale, createMockMenuDefinition } from '../_utils/dropdowntreemock.js';
+import { createBlankRootListView, createMockLocale, createMockMenuDefinition } from '../_utils/dropdowntreemock.js';
 import {
 	createRootTree,
 	findMenuTreeViewItemByLabel,
@@ -119,6 +120,34 @@ describe( 'DropdownMenuDefinitionController', () => {
 				] )
 			);
 		} );
+	} );
+
+	describe( 'events', () => {
+		const delegatedEvents = [ 'mouseenter', 'arrowleft', 'arrowright', 'change:isOpen' ];
+
+		for ( const event of delegatedEvents ) {
+			it( `should delegate ${ event } event to root menu view`, () => {
+				const { locale, menuRootList } = createBlankRootListView();
+				const menuInstance = new DropdownMenuView( locale, 'Hello World' );
+				const eventWatcherSpy = sinon.spy();
+
+				menuRootList.definition.appendTopLevelMenu(
+					{
+						label: 'Menu Root',
+						groups: [
+							{
+								items: [ menuInstance ]
+							}
+						]
+					}
+				);
+
+				menuRootList.on( `menu:${ event }`, eventWatcherSpy );
+				menuInstance.fire( event );
+
+				expect( eventWatcherSpy ).to.be.calledOnce;
+			} );
+		}
 	} );
 
 	describe( 'walk()', () => {
