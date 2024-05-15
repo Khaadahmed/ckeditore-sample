@@ -14,7 +14,7 @@ export function createRootTree( children = [] ) {
 
 export function mapMenuViewToMenuItemByLabel( label, tree, children = [] ) {
 	return mapMenuViewToMenuItem(
-		findMenuTreeViewItemByLabel( label, tree ),
+		findMenuTreeMenuViewByLabel( label, tree ),
 		children
 	);
 }
@@ -48,7 +48,7 @@ export function mapButtonViewToFlatMenuItem( button ) {
 	};
 }
 
-export function findMenuTreeViewItemByLabel( label, tree ) {
+export function findMenuTreeMenuViewByLabel( label, tree ) {
 	return findMenuTreeNodeByLabel( label, tree ).menu;
 }
 

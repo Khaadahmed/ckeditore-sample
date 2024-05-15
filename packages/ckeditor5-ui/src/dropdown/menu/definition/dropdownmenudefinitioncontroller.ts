@@ -104,15 +104,6 @@ export class DropdownMenuDefinitionController {
 	}
 
 	/**
-	 * Closes all menus.
-	 */
-	public closeAll(): void {
-		this.menus.forEach( menuView => {
-			menuView.isOpen = false;
-		} );
-	}
-
-	/**
 	 * Appends a menu to the dropdown menu definition parser.
 	 *
 	 * @param menuDefinition - The menu definition to append.
@@ -162,6 +153,15 @@ export class DropdownMenuDefinitionController {
 		if ( listItems.length ) {
 			targetParentMenuView.listView.items.addMany( listItems );
 		}
+	}
+
+	/**
+	 * Closes all menus.
+	 */
+	public closeAll(): void {
+		this.menus.forEach( menuView => {
+			menuView.isOpen = false;
+		} );
 	}
 
 	/**
