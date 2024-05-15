@@ -11,7 +11,7 @@ import { createTreeFromFlattenDropdownMenusList } from '../../../../src/dropdown
 import { createBlankRootListView, createMockDropdownMenuDefinition } from '../_utils/dropdowntreemock.js';
 import {
 	createRootTree,
-	mapButtonViewToMenuItem,
+	mapButtonViewToFlatMenuItem,
 	mapMenuViewToMenuItem,
 	mapMenuViewToMenuItemByLabel
 } from '../_utils/dropdowntreeutils.js';
@@ -34,12 +34,12 @@ describe( 'createTreeFromFlattenDropdownMenusList', () => {
 					[
 						...menusDefinitions[ 0 ].groups[ 0 ].items,
 						...menusDefinitions[ 0 ].groups[ 1 ].items
-					].map( mapButtonViewToMenuItem )
+					].map( mapButtonViewToFlatMenuItem )
 				),
 
 				mapMenuViewToMenuItemByLabel(
 					'Menu 2', tree,
-					menusDefinitions[ 1 ].groups[ 0 ].items.map( mapButtonViewToMenuItem )
+					menusDefinitions[ 1 ].groups[ 0 ].items.map( mapButtonViewToFlatMenuItem )
 				)
 			] )
 		);
@@ -105,7 +105,7 @@ describe( 'createTreeFromFlattenDropdownMenusList', () => {
 		expect( tree ).to.deep.equal(
 			createRootTree( [
 				mapMenuViewToMenuItemByLabel( 'Menu Root', tree, [
-					mapMenuViewToMenuItem( menuInstance, nestedEntries.map( mapButtonViewToMenuItem ) )
+					mapMenuViewToMenuItem( menuInstance, nestedEntries.map( mapButtonViewToFlatMenuItem ) )
 				] )
 			] )
 		);

@@ -14,7 +14,7 @@ import type { DropdownMenuDefinitions } from './definition/dropdownmenudefinitio
 import { DropdownRootMenuBehaviors } from './utils/dropdownmenubehaviors.js';
 import DropdownMenuListView from './dropdownmenulistview.js';
 
-import { DropdownMenuDefinitionParser } from './definition/dropdownmenudefinitionparser.js';
+import { DropdownMenuDefinitionController } from './definition/dropdownmenudefinitioncontroller.js';
 
 /**
  * Represents the root list view of a dropdown menu.
@@ -30,11 +30,11 @@ export default class DropdownMenuRootListView extends DropdownMenuListView {
 
 	/**
 	 * Parses the provided menu definitions and stores their parsed structure in the form of a tree.
-	 * The `DropdownMenuDefinitionParser` object is responsible for parsing the menu definitions and creating a tree structure.
+	 * The `DropdownMenuDefinitionController` object is responsible for parsing the menu definitions and creating a tree structure.
 	 *
-	 * @see DropdownMenuDefinitionParser
+	 * @see DropdownMenuDefinitionController
 	 */
-	public readonly definition = new DropdownMenuDefinitionParser( this );
+	public readonly definition = new DropdownMenuDefinitionController( this );
 
 	/**
 	 * Creates an instance of the DropdownMenuRootListView class.

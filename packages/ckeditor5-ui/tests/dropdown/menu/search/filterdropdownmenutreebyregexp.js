@@ -12,7 +12,7 @@ import {
 import { createMockDropdownMenuDefinition } from '../_utils/dropdowntreemock.js';
 import {
 	createRootTree,
-	mapButtonViewToMenuItem,
+	mapButtonViewToFlatMenuItem,
 	mapMenuViewToMenuItemByLabel,
 	markAsFound
 } from '../_utils/dropdowntreeutils.js';
@@ -49,7 +49,7 @@ describe( 'filterDropdownMenuTreeByRegExp', () => {
 							...menusDefinitions[ 0 ].groups[ 0 ].items,
 							...menusDefinitions[ 0 ].groups[ 1 ].items
 						]
-							.map( mapButtonViewToMenuItem )
+							.map( mapButtonViewToFlatMenuItem )
 					)
 				)
 			] )
@@ -73,14 +73,14 @@ describe( 'filterDropdownMenuTreeByRegExp', () => {
 							...menusDefinitions[ 0 ].groups[ 0 ].items,
 							...menusDefinitions[ 0 ].groups[ 1 ].items
 						]
-							.map( mapButtonViewToMenuItem )
+							.map( mapButtonViewToFlatMenuItem )
 					)
 				),
 
 				markAsFound(
 					mapMenuViewToMenuItemByLabel(
 						'Menu 2', tree,
-						menusDefinitions[ 1 ].groups[ 0 ].items.map( mapButtonViewToMenuItem )
+						menusDefinitions[ 1 ].groups[ 0 ].items.map( mapButtonViewToFlatMenuItem )
 					)
 				)
 			] )
@@ -104,7 +104,7 @@ describe( 'filterDropdownMenuTreeByRegExp', () => {
 					'Menu 1',
 					tree,
 					[
-						mapButtonViewToMenuItem( menusDefinitions[ 0 ].groups[ 0 ].items[ 0 ] )
+						mapButtonViewToFlatMenuItem( menusDefinitions[ 0 ].groups[ 0 ].items[ 0 ] )
 					].map( markAsFound )
 				)
 			] )

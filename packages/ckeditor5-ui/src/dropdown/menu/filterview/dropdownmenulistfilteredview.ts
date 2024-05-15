@@ -69,8 +69,6 @@ export default class DropdownMenuListFilteredView extends View implements Filter
 			this._menuView.definition.tree
 		);
 
-		console.info( this._menuView.definition.tree );
-
 		element!.innerHTML = '';
 
 		if ( this._foundListView ) {

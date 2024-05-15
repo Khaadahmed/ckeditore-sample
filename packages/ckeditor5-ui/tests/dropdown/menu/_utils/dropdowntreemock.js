@@ -17,11 +17,11 @@ export function createBlankRootListView() {
 	};
 }
 
-export function createMockMenuDefinition() {
+export function createMockMenuDefinition( label = 'Menu 1' ) {
 	const locale = createMockLocale();
 
 	return {
-		label: 'Menu 1',
+		label,
 		groups: [
 			{
 				items: [

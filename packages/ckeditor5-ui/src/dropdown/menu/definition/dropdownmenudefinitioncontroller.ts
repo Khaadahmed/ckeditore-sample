@@ -4,9 +4,10 @@
  */
 
 /**
- * @module ui/dropdown/menu/definition/dropdownmenudefinitionparser
+ * @module ui/dropdown/menu/definition/dropdownmenudefinitioncontroller
  */
 
+import type { Locale } from '@ckeditor/ckeditor5-utils';
 import type DropdownMenuRootListView from '../dropdownmenurootlistview.js';
 import type { DropdownMenuOrFlatItemView } from '../typings.js';
 import type {
@@ -36,10 +37,10 @@ import {
 } from '../search/walkoverdropdownmenutreeitems.js';
 
 /**
- * Represents a parser for the dropdown menu definition.
- * It stores the logical structure of the menu and does not handle its rendering.
+ * Represents a controller for the dropdown menu definition.
+ * This controller manages the creation and manipulation of the dropdown menu views.
  */
-export class DropdownMenuDefinitionParser {
+export class DropdownMenuDefinitionController {
 	/**
 	 * Array of top-level menus in the dropdown menu.
 	 */
@@ -51,12 +52,19 @@ export class DropdownMenuDefinitionParser {
 	private readonly _view: DropdownMenuRootListView;
 
 	/**
-	 * Creates an instance of DropdownMenuDefinitionParser.
+	 * Creates an instance of DropdownMenuDefinitionController.
 	 *
 	 * @param view The root list view of the dropdown menu.
 	 */
 	constructor( view: DropdownMenuRootListView ) {
 		this._view = view;
+	}
+
+	/**
+	 * The locale of the dropdown menu definition parser.
+	 */
+	public get locale(): Locale {
+		return this._view.locale!;
 	}
 
 	/**
@@ -96,13 +104,22 @@ export class DropdownMenuDefinitionParser {
 	}
 
 	/**
+	 * Closes all menus.
+	 */
+	public closeAll(): void {
+		this.menus.forEach( menuView => {
+			menuView.isOpen = false;
+		} );
+	}
+
+	/**
 	 * Appends a menu to the dropdown menu definition parser.
 	 *
 	 * @param menuDefinition - The menu definition to append.
 	 */
 	public appendTopLevelMenu( menuDefinition: DropdownMenuDefinition ): void {
 		const topLevelMenuView = new DropdownMenuListItemView(
-			this._view.locale!,
+			this.locale,
 			null,
 			this._registerMenuFromDefinition( menuDefinition )
 		);
@@ -120,9 +137,6 @@ export class DropdownMenuDefinitionParser {
 		groups: Array<DropdownMenuGroupDefinition>,
 		targetParentMenuView: DropdownMenuView
 	): void {
-		const { _view } = this;
-
-		const locale = _view.locale!;
 		const listItems = groups.flatMap( ( menuGroupDefinition, index ) => {
 			const menuOrFlatItems = menuGroupDefinition.items.map( itemDefinition => {
 				if ( isDropdownMenuDefinition( itemDefinition ) ) {
@@ -135,13 +149,13 @@ export class DropdownMenuDefinitionParser {
 			return [
 				// Append normal menu items.
 				...menuOrFlatItems.map( menuOrFlatItem => new DropdownMenuListItemView(
-					locale,
+					this.locale,
 					targetParentMenuView,
 					menuOrFlatItem
 				) ),
 
 				// Append separator between groups.
-				...index !== groups.length - 1 ? [ new ListSeparatorView( locale ) ] : []
+				...index !== groups.length - 1 ? [ new ListSeparatorView( this.locale ) ] : []
 			];
 		} );
 
@@ -161,10 +175,7 @@ export class DropdownMenuDefinitionParser {
 		menuDefinition: DropdownMenuDefinition,
 		parentMenuView?: DropdownMenuView
 	) {
-		const { _view } = this;
-		const locale = _view.locale!;
-
-		const menuView = new DropdownMenuView( locale, menuDefinition.label );
+		const menuView = new DropdownMenuView( this.locale, menuDefinition.label );
 
 		this.appendMenuItems( menuDefinition.groups, menuView );
 		this._registerMenu( menuView, parentMenuView );
@@ -220,10 +231,7 @@ export class DropdownMenuDefinitionParser {
 		}
 
 		menuView._attachBehaviors();
-		menuView.on( 'execute', () => {
-			// Close the whole menu bar when a component is executed.
-			this._view.close();
-		} );
+		menuView.on( 'execute', this.closeAll.bind( this ) );
 
 		this._menus.push( menuView );
 	}

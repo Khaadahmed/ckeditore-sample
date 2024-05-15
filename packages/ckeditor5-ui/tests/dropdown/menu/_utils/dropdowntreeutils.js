@@ -12,6 +12,13 @@ export function createRootTree( children = [] ) {
 	};
 }
 
+export function mapMenuViewToMenuItemByLabel( label, tree, children = [] ) {
+	return mapMenuViewToMenuItem(
+		findMenuTreeViewItemByLabel( label, tree ),
+		children
+	);
+}
+
 export function mapMenuViewToMenuItem( menu, children = [] ) {
 	return {
 		kind: 'Menu',
@@ -24,19 +31,13 @@ export function mapMenuViewToMenuItem( menu, children = [] ) {
 	};
 }
 
-export function mapMenuViewToMenuItemByLabel( label, tree, children = [] ) {
-	return {
-		kind: 'Menu',
-		menu: findMenuTreeViewItemByLabel( label, tree ),
-		search: {
-			raw: label,
-			text: label.toLowerCase()
-		},
-		children
-	};
+export function mapButtonViewToFlatMenuItemByLabel( label, tree ) {
+	return mapButtonViewToFlatMenuItem(
+		findMenuTreeViewFlatItemByLabel( label, tree )
+	);
 }
 
-export function mapButtonViewToMenuItem( button ) {
+export function mapButtonViewToFlatMenuItem( button ) {
 	return {
 		kind: 'Item',
 		item: button,
@@ -49,6 +50,10 @@ export function mapButtonViewToMenuItem( button ) {
 
 export function findMenuTreeViewItemByLabel( label, tree ) {
 	return findMenuTreeNodeByLabel( label, tree ).menu;
+}
+
+export function findMenuTreeViewFlatItemByLabel( label, tree ) {
+	return findMenuTreeNodeByLabel( label, tree ).item;
 }
 
 export function findMenuTreeNodeByLabel( label, tree ) {
