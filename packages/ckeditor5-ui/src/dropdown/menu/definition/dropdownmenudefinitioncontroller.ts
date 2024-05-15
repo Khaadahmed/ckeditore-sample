@@ -16,7 +16,7 @@ import type {
 	DropdownMenuGroupDefinition
 } from './dropdownmenudefinitiontypings.js';
 
-import { DropdownMenuListItemView } from '../dropdownmenulistitemview.js';
+import DropdownMenuListItemView from '../dropdownmenulistitemview.js';
 import { isDropdownMenuDefinition } from './dropdownmenudefinitionguards.js';
 import {
 	createTreeFromFlattenDropdownMenusList,

@@ -17,7 +17,7 @@ import type {
 import type { ButtonExecuteEvent } from '../../../button/button.js';
 import type DropdownMenuRootListView from '../dropdownmenurootlistview.js';
 
-import { DropdownMenuListItemView } from '../dropdownmenulistitemview.js';
+import DropdownMenuListItemView from '../dropdownmenulistitemview.js';
 import clickOutsideHandler from '../../../bindings/clickoutsidehandler.js';
 
 export const DropdownRootMenuBehaviors = {

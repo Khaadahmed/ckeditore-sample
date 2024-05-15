@@ -11,7 +11,7 @@ import type { DropdownMenuFocusableFlatItemView } from './typings.js';
 
 import DropdownMenuListItemButtonView from './dropdownmenulistitembuttonview.js';
 import DropdownMenuView from './dropdownmenuview.js';
-import { DropdownMenuListItemView } from './dropdownmenulistitemview.js';
+import DropdownMenuListItemView from './dropdownmenulistitemview.js';
 
 /**
  * Checks if the given object is an instance of DropdownMenuView.

@@ -15,7 +15,7 @@ import type DropdownMenuView from '../dropdownmenuview.js';
 import type { DropdownMenuFocusableFlatItemView } from '../typings.js';
 import { isDropdownMenuFocusableFlatItemView, isDropdownMenuView } from '../guards.js';
 
-import { DropdownMenuListItemView } from '../dropdownmenulistitemview.js';
+import DropdownMenuListItemView from '../dropdownmenulistitemview.js';
 import { createTextSearchMetadata, type WithTreeSearchMetadata } from './dropdownmenutreesearchmetadata.js';
 
 /**

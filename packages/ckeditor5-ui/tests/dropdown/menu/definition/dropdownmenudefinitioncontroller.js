@@ -7,7 +7,7 @@ import { DropdownMenuDefinitionController } from '../../../../src/dropdown/menu/
 import DropdownMenuRootListView from '../../../../src/dropdown/menu/dropdownmenurootlistview.js';
 import DropdownMenuListItemButtonView from '../../../../src/dropdown/menu/dropdownmenulistitembuttonview.js';
 import DropdownMenuView from '../../../../src/dropdown/menu/dropdownmenuview.js';
-import { DropdownMenuListItemView } from '../../../../src/dropdown/menu/dropdownmenulistitemview.js';
+import DropdownMenuListItemView from '../../../../src/dropdown/menu/dropdownmenulistitemview.js';
 
 import { createBlankRootListView, createMockLocale, createMockMenuDefinition } from '../_utils/dropdowntreemock.js';
 import {

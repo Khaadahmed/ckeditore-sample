@@ -10,7 +10,7 @@
 import type ListSeparatorView from '../../list/listseparatorview.js';
 import type DropdownMenuListItemButtonView from './dropdownmenulistitembuttonview.js';
 import type DropdownMenuView from './dropdownmenuview.js';
-import type { DropdownMenuListItemView } from './dropdownmenulistitemview.js';
+import type DropdownMenuListItemView from './dropdownmenulistitemview.js';
 
 /**
  * Represents a focusable flat item view in a dropdown menu.
