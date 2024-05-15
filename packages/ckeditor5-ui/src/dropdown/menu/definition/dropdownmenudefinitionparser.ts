@@ -11,12 +11,16 @@ import type DropdownMenuRootListView from '../dropdownmenurootlistview.js';
 import type { DropdownMenuOrFlatItemView } from '../typings.js';
 import type {
 	DropdownMenuDefinition,
-	DropdownMenuGroupDefinition,
-	DropdownMenuRootFactoryDefinition
+	DropdownMenuDefinitions,
+	DropdownMenuGroupDefinition
 } from './dropdownmenudefinitiontypings.js';
 
 import { DropdownMenuListItemView } from '../dropdownmenulistitemview.js';
 import { isDropdownMenuDefinition } from './dropdownmenudefinitionguards.js';
+import {
+	createTreeFromFlattenDropdownMenusList,
+	type DropdownMenuViewsRootTree
+} from '../search/createtreefromflattendropdownmenuslist.js';
 
 import DropdownMenuView from '../dropdownmenuview.js';
 import ListSeparatorView from '../../../list/listseparatorview.js';
@@ -26,10 +30,21 @@ import {
 	isDropdownMenuView
 } from '../guards.js';
 
+import {
+	walkOverDropdownMenuTreeItems,
+	type DropdownMenuViewsTreeWalkers
+} from '../search/walkoverdropdownmenutreeitems.js';
+
 /**
- * Parser for dropdown menu definitions.
+ * Represents a parser for the dropdown menu definition.
+ * It stores the logical structure of the menu and does not handle its rendering.
  */
 export class DropdownMenuDefinitionParser {
+	/**
+	 * Array of top-level menus in the dropdown menu.
+	 */
+	private _menus: Array<DropdownMenuView> = [];
+
 	/**
 	 * The root list view of the dropdown menu.
 	 */
@@ -45,18 +60,54 @@ export class DropdownMenuDefinitionParser {
 	}
 
 	/**
-	 * Appends menus to the dropdown menu root view based on the provided definition.
+	 * Gets the array of top-level menus in the dropdown menu.
 	 *
-	 * @param definition The dropdown menu factory definition.
+	 * @returns The array of top-level menus.
 	 */
-	public appendMenus( { items }: DropdownMenuRootFactoryDefinition ): void {
-		const topLevelMenuViews = items.map( menuDefinition => new DropdownMenuListItemView(
+	public get menus(): Readonly<Array<DropdownMenuView>> {
+		return [ ...this._menus ];
+	}
+
+	/**
+	 * Gets the tree representation of the dropdown menu views.
+	 *
+	 * @returns The tree representation of the dropdown menu views.
+	 */
+	public get tree(): Readonly<DropdownMenuViewsRootTree> {
+		return createTreeFromFlattenDropdownMenusList( this._menus );
+	}
+
+	/**
+	 * Walks over the dropdown menu views using the specified walkers.
+	 *
+	 * @param walkers - The walkers to use.
+	 */
+	public walk( walkers: DropdownMenuViewsTreeWalkers ): void {
+		walkOverDropdownMenuTreeItems( walkers, this.tree );
+	}
+
+	/**
+	 * Appends multiple menus to the dropdown menu definition parser.
+	 *
+	 * @param items - An array of `DropdownMenuDefinition` objects representing the menus to be appended.
+	 */
+	public appendTopLevelMenus( items: DropdownMenuDefinitions ): void {
+		items.forEach( this.appendTopLevelMenu.bind( this ) );
+	}
+
+	/**
+	 * Appends a menu to the dropdown menu definition parser.
+	 *
+	 * @param menuDefinition - The menu definition to append.
+	 */
+	public appendTopLevelMenu( menuDefinition: DropdownMenuDefinition ): void {
+		const topLevelMenuView = new DropdownMenuListItemView(
 			this._view.locale!,
 			null,
 			this._registerMenuFromDefinition( menuDefinition )
-		) );
+		);
 
-		this._view.items.addMany( topLevelMenuViews );
+		this._view.items.add( topLevelMenuView );
 	}
 
 	/**
@@ -78,7 +129,7 @@ export class DropdownMenuDefinitionParser {
 					return this._registerMenuFromDefinition( itemDefinition, targetParentMenuView );
 				}
 
-				return this._registerFromReusedInstance( itemDefinition, targetParentMenuView );
+				return this._registerFlatItemOrMenuFromReusedInstance( itemDefinition, targetParentMenuView );
 			} );
 
 			return [
@@ -116,7 +167,7 @@ export class DropdownMenuDefinitionParser {
 		const menuView = new DropdownMenuView( locale, menuDefinition.label );
 
 		this.appendMenuItems( menuDefinition.groups, menuView );
-		_view.registerMenu( menuView, parentMenuView );
+		this._registerMenu( menuView, parentMenuView );
 
 		return menuView;
 	}
@@ -128,23 +179,21 @@ export class DropdownMenuDefinitionParser {
 	 * @param parentMenuView The parent menu view.
 	 * @returns The registered component view.
 	 */
-	private _registerFromReusedInstance(
+	private _registerFlatItemOrMenuFromReusedInstance(
 		menuOrFlatItemView: DropdownMenuOrFlatItemView,
 		parentMenuView: DropdownMenuView
 	) {
-		const { _view } = this;
-
 		if ( isDropdownMenuFocusableFlatItemView( menuOrFlatItemView ) ) {
 			menuOrFlatItemView.delegate( 'mouseenter' ).to( parentMenuView );
 
 			return menuOrFlatItemView;
 		}
 
-		_view.registerMenu( menuOrFlatItemView, parentMenuView );
+		this._registerMenu( menuOrFlatItemView, parentMenuView );
 
 		menuOrFlatItemView.nestedMenuListItems.forEach( menuListItem => {
 			if ( isDropdownMenuListItemView( menuListItem ) && isDropdownMenuView( menuListItem.flatItemOrNestedMenuView ) ) {
-				this._registerFromReusedInstance(
+				this._registerFlatItemOrMenuFromReusedInstance(
 					menuListItem.flatItemOrNestedMenuView,
 					menuOrFlatItemView
 				);
@@ -152,5 +201,30 @@ export class DropdownMenuDefinitionParser {
 		} );
 
 		return menuOrFlatItemView;
+	}
+
+	/**
+	 * Registers a menu in the dropdown menu.
+	 *
+	 * @param menuView The menu view to register.
+	 * @param parentMenuView The parent menu view, if any.
+	 */
+	private _registerMenu( menuView: DropdownMenuView, parentMenuView: DropdownMenuView | null = null ): void {
+		const delegatedEvents = [ 'mouseenter', 'arrowleft', 'arrowright', 'change:isOpen' ] as const;
+
+		if ( parentMenuView ) {
+			menuView.delegate( ...delegatedEvents ).to( parentMenuView );
+			menuView.parentMenuView = parentMenuView;
+		} else {
+			menuView.delegate( ...delegatedEvents ).to( this._view, name => `menu:${ name }` );
+		}
+
+		menuView._attachBehaviors();
+		menuView.on( 'execute', () => {
+			// Close the whole menu bar when a component is executed.
+			this._view.close();
+		} );
+
+		this._menus.push( menuView );
 	}
 }

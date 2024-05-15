@@ -8,7 +8,7 @@
  */
 
 import type { Locale } from '@ckeditor/ckeditor5-utils';
-import type { DropdownMenuRootFactoryDefinition } from '../definition/dropdownmenudefinitiontypings.js';
+import type { DropdownMenuDefinitions } from '../definition/dropdownmenudefinitiontypings.js';
 import type FilteredView from '../../../search/filteredview.js';
 
 import { filterDropdownMenuTreeByRegExp } from '../search/filterdropdownmenutreebyregexp.js';
@@ -33,15 +33,12 @@ export default class DropdownMenuListFilteredView extends View implements Filter
 	protected _foundListView: DropdownMenuListFoundListView | null = null;
 
 	/**
-	 * Creates an instance of the `DropdownMenuListFilteredView` class.
-	 *
-	 * @param locale The localization services instance.
-	 * @param definition The definition of the dropdown menu root factory.
+	 * Represents a filtered view for the dropdown menu list.
 	 */
-	constructor( locale: Locale, definition: DropdownMenuRootFactoryDefinition ) {
+	constructor( locale: Locale, definitions: DropdownMenuDefinitions ) {
 		super( locale );
 
-		this._menuView = new DropdownMenuRootListView( locale, definition );
+		this._menuView = new DropdownMenuRootListView( locale, definitions );
 		this.setTemplate( {
 			tag: 'div',
 
@@ -67,7 +64,12 @@ export default class DropdownMenuListFilteredView extends View implements Filter
 	 */
 	public filter( regExp: RegExp | null ): { resultsCount: number; totalItemsCount: number } {
 		const { element } = this;
-		const { filteredTree, resultsCount, totalItemsCount } = filterDropdownMenuTreeByRegExp( regExp, this._menuView.tree );
+		const { filteredTree, resultsCount, totalItemsCount } = filterDropdownMenuTreeByRegExp(
+			regExp,
+			this._menuView.definition.tree
+		);
+
+		console.info( this._menuView.definition.tree );
 
 		element!.innerHTML = '';
 

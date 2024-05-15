@@ -25,7 +25,7 @@ describe( 'createTreeFromFlattenDropdownMenusList', () => {
 
 	it( 'should create flatten list of menus', () => {
 		const { menusDefinitions, menuRootList } = createMockDropdownMenuDefinition();
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 
 		expect( tree ).to.deep.equal(
 			createRootTree( [
@@ -49,20 +49,18 @@ describe( 'createTreeFromFlattenDropdownMenusList', () => {
 		const { locale, menuRootList } = createBlankRootListView();
 		const menuInstance = new DropdownMenuView( locale, 'Hello World' );
 
-		menuRootList.definition.appendMenus( {
-			items: [
-				{
-					label: 'Menu Root',
-					groups: [
-						{
-							items: [ menuInstance ]
-						}
-					]
-				}
-			]
-		} );
+		menuRootList.definition.appendTopLevelMenu(
+			{
+				label: 'Menu Root',
+				groups: [
+					{
+						items: [ menuInstance ]
+					}
+				]
+			}
+		);
 
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 
 		expect( tree ).to.deep.equal(
 			createRootTree( [
@@ -82,18 +80,16 @@ describe( 'createTreeFromFlattenDropdownMenusList', () => {
 			new DropdownMenuListItemButtonView( locale, 'World' )
 		];
 
-		menuRootList.definition.appendMenus( {
-			items: [
-				{
-					label: 'Menu Root',
-					groups: [
-						{
-							items: [ menuInstance ]
-						}
-					]
-				}
-			]
-		} );
+		menuRootList.definition.appendTopLevelMenu(
+			{
+				label: 'Menu Root',
+				groups: [
+					{
+						items: [ menuInstance ]
+					}
+				]
+			}
+		);
 
 		menuRootList.definition.appendMenuItems(
 			[
@@ -104,7 +100,7 @@ describe( 'createTreeFromFlattenDropdownMenusList', () => {
 			menuInstance
 		);
 
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 
 		expect( tree ).to.deep.equal(
 			createRootTree( [

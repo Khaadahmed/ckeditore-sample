@@ -30,12 +30,6 @@ export type DropdownMenuDefinition = {
 };
 
 /**
- * Represents the definition of a dropdown menu root factory.
+ * Represents an array of dropdown menu definitions.
  */
-export type DropdownMenuRootFactoryDefinition = {
-
-	/**
-	 * An array of dropdown menu definitions.
-	 */
-	items: NonEmptyArray<DropdownMenuDefinition>;
-};
+export type DropdownMenuDefinitions = NonEmptyArray<DropdownMenuDefinition>;

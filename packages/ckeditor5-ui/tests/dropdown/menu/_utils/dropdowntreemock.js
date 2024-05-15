@@ -56,9 +56,7 @@ export function createMockDropdownMenuDefinition() {
 		}
 	];
 
-	menuRootList.definition.appendMenus( {
-		items: menusDefinitions
-	} );
+	menuRootList.definition.appendTopLevelMenus( menusDefinitions );
 
 	return {
 		locale,

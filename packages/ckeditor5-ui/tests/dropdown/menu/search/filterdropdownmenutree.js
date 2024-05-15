@@ -31,7 +31,7 @@ describe( 'filterDropdownMenuTree', () => {
 	it( 'should return all menu children if menu label matches', () => {
 		const { menuRootList, menusDefinitions } = createMockDropdownMenuDefinition();
 
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 		const { resultsCount, filteredTree, totalItemsCount } = filterDropdownMenuTree(
 			node => node.search.raw === 'Menu 1',
 			tree
@@ -58,7 +58,7 @@ describe( 'filterDropdownMenuTree', () => {
 	it( 'should return child if label matches', () => {
 		const { menuRootList, menusDefinitions } = createMockDropdownMenuDefinition();
 
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 		const { resultsCount, filteredTree, totalItemsCount } = filterDropdownMenuTree(
 			node => node.search.raw === 'Foo',
 			tree
@@ -82,7 +82,7 @@ describe( 'filterDropdownMenuTree', () => {
 	it( 'should not modify passed tree object', () => {
 		const { menuRootList } = createMockDropdownMenuDefinition();
 
-		const tree = Object.freeze( createTreeFromFlattenDropdownMenusList( menuRootList.menus ) );
+		const tree = Object.freeze( createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus ) );
 		const { filteredTree } = filterDropdownMenuTree(
 			node => node.search.raw === 'Foo',
 			tree

@@ -15,7 +15,7 @@ import {
 describe( 'flattenDropdownMenuTree', () => {
 	it( 'should return empty array if passed empty tree', () => {
 		const { menuRootList } = createBlankRootListView();
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 		const flatten = flattenDropdownMenuTree( tree );
 
 		expect( flatten ).to.deep.equal( [] );
@@ -23,7 +23,7 @@ describe( 'flattenDropdownMenuTree', () => {
 
 	it( 'should return flatten list of nodes with parents', () => {
 		const { menuRootList } = createMockDropdownMenuDefinition();
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 		const flatten = flattenDropdownMenuTree( tree );
 
 		const byLabel = label => findMenuTreeNodeByLabel( label, tree );

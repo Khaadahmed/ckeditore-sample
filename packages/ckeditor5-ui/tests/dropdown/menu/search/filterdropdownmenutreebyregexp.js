@@ -31,7 +31,7 @@ describe( 'filterDropdownMenuTreeByRegExp', () => {
 	it( 'should return all menu children if menu label matches', () => {
 		const { menuRootList, menusDefinitions } = createMockDropdownMenuDefinition();
 
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 		const { resultsCount, filteredTree, totalItemsCount } = filterDropdownMenuTreeByRegExp(
 			/Menu 1/ig,
 			tree
@@ -59,7 +59,7 @@ describe( 'filterDropdownMenuTreeByRegExp', () => {
 	it( 'should return all child items if regexp is null', () => {
 		const { menuRootList, menusDefinitions } = createMockDropdownMenuDefinition();
 
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 		const { resultsCount, filteredTree, totalItemsCount } = filterDropdownMenuTreeByRegExp( null, tree );
 
 		expect( resultsCount ).to.be.equal( 5 );
@@ -90,7 +90,7 @@ describe( 'filterDropdownMenuTreeByRegExp', () => {
 	it( 'should return child if label matches', () => {
 		const { menuRootList, menusDefinitions } = createMockDropdownMenuDefinition();
 
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 		const { resultsCount, filteredTree, totalItemsCount } = filterDropdownMenuTreeByRegExp(
 			/Foo/ig,
 			tree
@@ -114,7 +114,7 @@ describe( 'filterDropdownMenuTreeByRegExp', () => {
 	it( 'should not modify passed tree object', () => {
 		const { menuRootList } = createMockDropdownMenuDefinition();
 
-		const tree = Object.freeze( createTreeFromFlattenDropdownMenusList( menuRootList.menus ) );
+		const tree = Object.freeze( createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus ) );
 		const { filteredTree } = filterDropdownMenuTreeByRegExp(
 			/Foo/gi,
 			tree

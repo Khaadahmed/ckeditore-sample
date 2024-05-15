@@ -20,7 +20,7 @@ describe( 'walkOverDropdownMenuTreeItems', () => {
 
 	it( 'should walk through tree in correct order', () => {
 		const { menuRootList } = createMockDropdownMenuDefinition();
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 
 		const tracking = {
 			entered: [],
@@ -55,7 +55,7 @@ describe( 'walkOverDropdownMenuTreeItems', () => {
 
 	it( 'should be possible to pass walker inline enter function', () => {
 		const { menuRootList } = createMockDropdownMenuDefinition();
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 
 		const entered = [];
 		const trackedWalkers = ( { node } ) => {
@@ -77,7 +77,7 @@ describe( 'walkOverDropdownMenuTreeItems', () => {
 
 	it( 'should abort walking to children in node if enter returns false', () => {
 		const { menuRootList } = createMockDropdownMenuDefinition();
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 
 		const tracking = {
 			entered: [],

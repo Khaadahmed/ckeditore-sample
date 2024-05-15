@@ -46,7 +46,7 @@ describe( 'groupDropdownTreeByFirstFoundParent', () => {
 	function filterByRegExpMock( regexp ) {
 		const { menuRootList } = createMockDropdownMenuDefinition();
 
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 		const { filteredTree } = filterDropdownMenuTreeByRegExp( regexp, tree );
 
 		const byLabel = label => findMenuTreeNodeByLabel( label, filteredTree );

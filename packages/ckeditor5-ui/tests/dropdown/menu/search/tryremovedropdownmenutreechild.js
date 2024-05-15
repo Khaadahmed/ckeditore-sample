@@ -10,7 +10,7 @@ import { createMockDropdownMenuDefinition } from '../_utils/dropdowntreemock.js'
 describe( 'tryRemoveDropdownMenuTreeChild', () => {
 	it( 'should remove menu child from root node', () => {
 		const { menuRootList } = createMockDropdownMenuDefinition();
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 		const [ child ] = tree.children;
 
 		const resultTree = tryRemoveDropdownMenuTreeChild( tree, child );
@@ -21,7 +21,7 @@ describe( 'tryRemoveDropdownMenuTreeChild', () => {
 
 	it( 'should remove menu child from menu node', () => {
 		const { menuRootList } = createMockDropdownMenuDefinition();
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 
 		const [ parent ] = tree.children;
 		const [ child ] = parent.children;
@@ -32,7 +32,7 @@ describe( 'tryRemoveDropdownMenuTreeChild', () => {
 
 	it( 'should do do nothing on item entry', () => {
 		const { menuRootList } = createMockDropdownMenuDefinition();
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 
 		const [ parent ] = tree.children;
 		const [ child ] = parent.children;

@@ -20,7 +20,7 @@ describe( 'getTotalDropdownMenuTreeFlatItemsCount', () => {
 
 	it( 'should return proper flat items count', () => {
 		const { menuRootList } = createMockDropdownMenuDefinition();
-		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.menus );
+		const tree = createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus );
 		const result = getTotalDropdownMenuTreeFlatItemsCount( tree );
 
 		expect( result ).to.be.equal( 5 );

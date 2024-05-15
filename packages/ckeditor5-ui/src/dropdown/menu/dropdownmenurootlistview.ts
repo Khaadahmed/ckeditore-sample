@@ -9,34 +9,17 @@
 
 import type { Locale } from '@ckeditor/ckeditor5-utils';
 import type { DropdownMenuChangeIsOpenEvent } from './events.js';
-import type { DropdownMenuRootFactoryDefinition } from './definition/dropdownmenudefinitiontypings.js';
-import type DropdownMenuView from './dropdownmenuview.js';
+import type { DropdownMenuDefinitions } from './definition/dropdownmenudefinitiontypings.js';
 
 import { DropdownRootMenuBehaviors } from './utils/dropdownmenubehaviors.js';
 import DropdownMenuListView from './dropdownmenulistview.js';
 
-import {
-	createTreeFromFlattenDropdownMenusList,
-	type DropdownMenuViewsRootTree
-} from './search/createtreefromflattendropdownmenuslist.js';
-
 import { DropdownMenuDefinitionParser } from './definition/dropdownmenudefinitionparser.js';
-import {
-	walkOverDropdownMenuTreeItems,
-	type DropdownMenuViewsTreeWalkers
-} from './search/walkoverdropdownmenutreeitems.js';
-
-const EVENT_NAME_DELEGATES = [ 'mouseenter', 'arrowleft', 'arrowright', 'change:isOpen' ] as const;
 
 /**
  * Represents the root list view of a dropdown menu.
  */
 export default class DropdownMenuRootListView extends DropdownMenuListView {
-	/**
-	 * Array of top-level menus in the dropdown menu.
-	 */
-	private _menus: Array<DropdownMenuView> = [];
-
 	/**
 	 * Indicates whether any of the top-level menus are open in the menu bar. To close
 	 * the menu bar, use the `close` method.
@@ -46,64 +29,36 @@ export default class DropdownMenuRootListView extends DropdownMenuListView {
 	declare public isOpen: boolean;
 
 	/**
+	 * Parses the provided menu definitions and stores their parsed structure in the form of a tree.
+	 * The `DropdownMenuDefinitionParser` object is responsible for parsing the menu definitions and creating a tree structure.
+	 *
+	 * @see DropdownMenuDefinitionParser
+	 */
+	public readonly definition = new DropdownMenuDefinitionParser( this );
+
+	/**
 	 * Creates an instance of the DropdownMenuRootListView class.
 	 *
 	 * @param locale - The locale object.
 	 * @param definition The definition object for the dropdown menu root factory.
 	 */
-	constructor( locale: Locale, definition?: DropdownMenuRootFactoryDefinition ) {
+	constructor( locale: Locale, definitions?: DropdownMenuDefinitions ) {
 		super( locale );
 
 		this.set( 'isOpen', false );
 
 		this._setupIsOpenUpdater();
 
-		if ( definition ) {
-			this.definition.appendMenus( definition );
+		if ( definitions && definitions.length ) {
+			this.definition.appendTopLevelMenus( definitions );
 		}
-	}
-
-	/**
-	 * Gets the definition parser for the dropdown menu.
-	 *
-	 * @returns The definition parser.
-	 */
-	public get definition(): DropdownMenuDefinitionParser {
-		return new DropdownMenuDefinitionParser( this );
-	}
-
-	/**
-	 * Gets the array of top-level menus in the dropdown menu.
-	 *
-	 * @returns The array of top-level menus.
-	 */
-	public get menus(): Readonly<Array<DropdownMenuView>> {
-		return [ ...this._menus ];
-	}
-
-	/**
-	 * Gets the tree representation of the dropdown menu views.
-	 *
-	 * @returns The tree representation of the dropdown menu views.
-	 */
-	public get tree(): Readonly<DropdownMenuViewsRootTree> {
-		return createTreeFromFlattenDropdownMenusList( this._menus );
-	}
-
-	/**
-	 * Walks over the dropdown menu views using the specified walkers.
-	 *
-	 * @param walkers - The walkers to use.
-	 */
-	public walk( walkers: DropdownMenuViewsTreeWalkers ): void {
-		walkOverDropdownMenuTreeItems( walkers, this.tree );
 	}
 
 	/**
 	 * Closes all menus in the dropdown menu bar.
 	 */
 	public close(): void {
-		for ( const menuView of this._menus ) {
+		for ( const menuView of this.definition.menus ) {
 			menuView.isOpen = false;
 		}
 	}
@@ -119,29 +74,6 @@ export default class DropdownMenuRootListView extends DropdownMenuListView {
 		DropdownRootMenuBehaviors.closeMenuWhenAnotherOnTheSameLevelOpens( this );
 		DropdownRootMenuBehaviors.closeOnClickOutside( this );
 		DropdownRootMenuBehaviors.closeWhenOutsideElementFocused( this );
-	}
-
-	/**
-	 * Registers a menu in the dropdown menu.
-	 *
-	 * @param menuView - The menu view to register.
-	 * @param parentMenuView - The parent menu view, if any.
-	 */
-	public registerMenu( menuView: DropdownMenuView, parentMenuView: DropdownMenuView | null = null ): void {
-		if ( parentMenuView ) {
-			menuView.delegate( ...EVENT_NAME_DELEGATES ).to( parentMenuView );
-			menuView.parentMenuView = parentMenuView;
-		} else {
-			menuView.delegate( ...EVENT_NAME_DELEGATES ).to( this, name => `menu:${ name }` );
-		}
-
-		menuView._attachBehaviors();
-		menuView.on( 'execute', () => {
-			// Close the whole menu bar when a component is executed.
-			this.close();
-		} );
-
-		this._menus.push( menuView );
 	}
 
 	/**
@@ -161,7 +93,7 @@ export default class DropdownMenuRootListView extends DropdownMenuListView {
 				this.isOpen = true;
 			} else {
 				closeTimeout = setTimeout( () => {
-					this.isOpen = this._menus.some( ( { isOpen } ) => isOpen );
+					this.isOpen = this.definition.menus.some( ( { isOpen } ) => isOpen );
 				}, 0 );
 			}
 		} );

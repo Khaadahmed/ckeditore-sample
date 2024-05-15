@@ -12,7 +12,7 @@ describe( 'shallowCloneDropdownMenuTree', () => {
 	it( 'should clone tree with nested children (except views)', () => {
 		const { menuRootList } = createMockDropdownMenuDefinition();
 
-		const tree = Object.freeze( createTreeFromFlattenDropdownMenusList( menuRootList.menus ) );
+		const tree = Object.freeze( createTreeFromFlattenDropdownMenusList( menuRootList.definition.menus ) );
 		const clonedTree = shallowCloneDropdownMenuTree( tree );
 
 		clonedTree.children.push( 2 );
