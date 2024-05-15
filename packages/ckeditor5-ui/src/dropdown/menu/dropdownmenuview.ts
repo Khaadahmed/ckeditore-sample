@@ -26,10 +26,7 @@ import { DropdownMenuBehaviors } from './utils/dropdownmenubehaviors.js';
 import View from '../../view.js';
 
 import DropdownMenuListView from './dropdownmenulistview.js';
-import {
-	DropdownMenuPanelView,
-	type DropdownMenuPanelPosition
-} from './dropdownmenupanelview.js';
+import DropdownMenuPanelView, { type DropdownMenuPanelPosition } from './dropdownmenupanelview.js';
 
 import '../../../theme/components/dropdown/menu/dropdownmenu.css';
 

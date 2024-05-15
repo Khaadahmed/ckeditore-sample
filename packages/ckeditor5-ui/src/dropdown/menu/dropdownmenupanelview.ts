@@ -19,7 +19,7 @@ import '../../../theme/components/dropdown/menu/dropdownmenupanel.css';
  * Represents the view for the dropdown menu panel.
  * This class extends the `View` class and implements the `FocusableView` interface.
  */
-export class DropdownMenuPanelView extends View implements FocusableView {
+export default class DropdownMenuPanelView extends View implements FocusableView {
 	/**
 	 * Collection of the child views in this panel.
 	 */
