@@ -58,9 +58,7 @@ export default class DropdownMenuRootListView extends DropdownMenuListView {
 	 * Closes all menus in the dropdown menu bar.
 	 */
 	public close(): void {
-		for ( const menuView of this.definition.menus ) {
-			menuView.isOpen = false;
-		}
+		this.definition.closeAll();
 	}
 
 	/**

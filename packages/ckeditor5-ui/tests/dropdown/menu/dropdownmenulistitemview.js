@@ -18,7 +18,7 @@ describe( 'DropdownMenuListItemView', () => {
 	beforeEach( () => {
 		locale = new Locale();
 		parentMenuView = new DropdownMenuView( locale );
-		childMenu =  new DropdownMenuView( locale );
+		childMenu = new DropdownMenuView( locale );
 		listItemView = new DropdownMenuListItemView( locale, parentMenuView, childMenu );
 	} );
 
