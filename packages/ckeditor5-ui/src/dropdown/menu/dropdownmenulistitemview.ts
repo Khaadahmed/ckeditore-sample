@@ -19,6 +19,9 @@ import '../../../theme/components/dropdown/menu/dropdownmenulistitem.css';
  * Represents a view for a single item in a dropdown menu list.
  */
 export class DropdownMenuListItemView extends ListItemView {
+	/**
+	 * The view representing either a flat item or a nested menu in a dropdown menu list item.
+	 */
 	public readonly flatItemOrNestedMenuView: DropdownMenuView | DropdownMenuFocusableFlatItemView;
 
 	constructor(

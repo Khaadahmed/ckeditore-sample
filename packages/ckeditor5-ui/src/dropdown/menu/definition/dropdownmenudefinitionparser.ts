@@ -72,31 +72,30 @@ export class DropdownMenuDefinitionParser {
 		const { _view } = this;
 
 		const locale = _view.locale!;
-		const items = groups.flatMap( ( menuGroupDefinition, index ) => {
-			const menuItems = menuGroupDefinition.items.map( itemDefinition => {
+		const listItems = groups.flatMap( ( menuGroupDefinition, index ) => {
+			const menuOrFlatItems = menuGroupDefinition.items.map( itemDefinition => {
 				if ( isDropdownMenuDefinition( itemDefinition ) ) {
-					return new DropdownMenuListItemView(
-						locale,
-						targetParentMenuView,
-						this._registerMenuFromDefinition( itemDefinition, targetParentMenuView )
-					);
+					return this._registerMenuFromDefinition( itemDefinition, targetParentMenuView );
 				}
 
-				return new DropdownMenuListItemView(
-					locale,
-					targetParentMenuView,
-					this._registerFromReusedInstance( itemDefinition, targetParentMenuView )
-				);
+				return this._registerFromReusedInstance( itemDefinition, targetParentMenuView );
 			} );
 
 			return [
-				...menuItems,
+				// Append normal menu items.
+				...menuOrFlatItems.map( menuOrFlatItem => new DropdownMenuListItemView(
+					locale,
+					targetParentMenuView,
+					menuOrFlatItem
+				) ),
+
+				// Append separator between groups.
 				...index !== groups.length - 1 ? [ new ListSeparatorView( locale ) ] : []
 			];
 		} );
 
-		if ( items.length ) {
-			targetParentMenuView.listView.items.addMany( items );
+		if ( listItems.length ) {
+			targetParentMenuView.listView.items.addMany( listItems );
 		}
 	}
 
