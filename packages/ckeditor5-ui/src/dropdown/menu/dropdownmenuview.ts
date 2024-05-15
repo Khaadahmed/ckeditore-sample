@@ -17,6 +17,7 @@ import {
 } from '@ckeditor/ckeditor5-utils';
 
 import type { FocusableView } from '../../focuscycler.js';
+import type { DropdownNestedMenuListItemView } from './typings.js';
 
 import { DropdownMenuButtonView } from './dropdownmenubuttonview.js';
 import { DropdownMenuViewPanelPositioningFunctions } from './utils/dropdownmenupositioningfunctions.js';
@@ -154,6 +155,13 @@ export default class DropdownMenuView extends View implements FocusableView {
 				this.panelView
 			]
 		} );
+	}
+
+	/**
+	 * Gets the nested menu items of the dropdown menu view.
+	 */
+	public get nestedMenuListItems(): Readonly<Array<DropdownNestedMenuListItemView>> {
+		return [ ...this.listView.items ] as Array<DropdownNestedMenuListItemView>;
 	}
 
 	/**

@@ -8,13 +8,7 @@
  */
 
 import type { NonEmptyArray } from '@ckeditor/ckeditor5-core';
-import type { DropdownMenuFlatItemView } from '../typings.js';
-import type DropdownMenuView from '../dropdownmenuview.js';
-
-/**
- * Represents the definition of a dropdown menu view item.
- */
-export type DropdownMenuViewItemDefinition = DropdownMenuView | DropdownMenuFlatItemView;
+import type { DropdownMenuOrFlatItemView } from '../typings';
 
 /**
  * Represents the definition of a dropdown menu group.
@@ -24,7 +18,7 @@ export type DropdownMenuGroupDefinition = {
 	/**
 	 * An array of items that belong to the dropdown menu group.
 	 */
-	items: Array<DropdownMenuDefinition | DropdownMenuViewItemDefinition>;
+	items: Array<DropdownMenuDefinition | DropdownMenuOrFlatItemView>;
 };
 
 /**

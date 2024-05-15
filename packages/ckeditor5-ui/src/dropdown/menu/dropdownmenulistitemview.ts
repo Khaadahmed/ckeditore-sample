@@ -8,6 +8,7 @@
  */
 
 import type { Locale } from '@ckeditor/ckeditor5-utils';
+import type { DropdownMenuFocusableFlatItemView } from './typings.js';
 import type DropdownMenuView from './dropdownmenuview.js';
 
 import ListItemView from '../../list/listitemview.js';
@@ -18,16 +19,19 @@ import '../../../theme/components/dropdown/menu/dropdownmenulistitem.css';
  * Represents a view for a single item in a dropdown menu list.
  */
 export class DropdownMenuListItemView extends ListItemView {
-	/**
-	 * Creates an instance of the list item view.
-	 *
-	 * @param locale The localization services instance.
-	 * @param parentMenuView The parent dropdown menu view.
-	 */
-	constructor( locale: Locale, parentMenuView?: DropdownMenuView ) {
+	public readonly flatItemOrNestedMenuView: DropdownMenuView | DropdownMenuFocusableFlatItemView;
+
+	constructor(
+		locale: Locale,
+		parentMenuView: DropdownMenuView | null,
+		flatItemOrNestedMenuView: DropdownMenuView | DropdownMenuFocusableFlatItemView
+	) {
 		super( locale );
 
 		const bind = this.bindTemplate;
+
+		this.flatItemOrNestedMenuView = flatItemOrNestedMenuView;
+		this.children.add( flatItemOrNestedMenuView );
 
 		this.extendTemplate( {
 			attributes: {

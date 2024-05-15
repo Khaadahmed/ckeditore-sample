@@ -12,8 +12,8 @@ import { mapFilter } from '@ckeditor/ckeditor5-utils';
 import type { Increment } from '@ckeditor/ckeditor5-core';
 import type DropdownMenuView from '../dropdownmenuview.js';
 
-import type { DropdownMenuFlatItemView } from '../typings.js';
-import { isDropdownMenuFlatItemView, isDropdownMenuView } from '../guards.js';
+import type { DropdownMenuFocusableFlatItemView } from '../typings.js';
+import { isDropdownMenuFocusableFlatItemView, isDropdownMenuView } from '../guards.js';
 
 import { DropdownMenuListItemView } from '../dropdownmenulistitemview.js';
 import { createTextSearchMetadata, type WithTreeSearchMetadata } from './dropdownmenutreesearchmetadata.js';
@@ -53,7 +53,7 @@ export function createTreeFromFlattenDropdownMenusList( menus: Array<DropdownMen
 
 			const firstContentChild = item.children.first;
 
-			if ( isDropdownMenuFlatItemView( firstContentChild ) ) {
+			if ( isDropdownMenuFocusableFlatItemView( firstContentChild ) ) {
 				// If the item is a flat item, add it to the children array.
 				children.push( {
 					kind: 'Item',
@@ -104,7 +104,7 @@ export type DropdownMenuViewsTreeFlatItem<Extend = unknown> =
 	& WithTreeEntryKind<'Item'>
 	& WithTreeSearchMetadata
 	& {
-		item: DropdownMenuFlatItemView;
+		item: DropdownMenuFocusableFlatItemView;
 	};
 
 /**

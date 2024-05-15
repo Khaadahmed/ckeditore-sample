@@ -7,24 +7,24 @@
  * @module ui/dropdown/menu/definition/dropdownmenudefinitionparser
  */
 
-import { last } from 'lodash-es';
-
-import type DropdownMenuListItemButtonView from '../dropdownmenulistitembuttonview.js';
 import type DropdownMenuRootListView from '../dropdownmenurootlistview.js';
+import type { DropdownMenuOrFlatItemView } from '../typings.js';
 import type {
 	DropdownMenuDefinition,
 	DropdownMenuGroupDefinition,
-	DropdownMenuRootFactoryDefinition,
-	DropdownMenuViewItemDefinition
+	DropdownMenuRootFactoryDefinition
 } from './dropdownmenudefinitiontypings.js';
 
 import { DropdownMenuListItemView } from '../dropdownmenulistitemview.js';
 import { isDropdownMenuDefinition } from './dropdownmenudefinitionguards.js';
 
-import DropdownMenuListView from '../dropdownmenulistview.js';
 import DropdownMenuView from '../dropdownmenuview.js';
 import ListSeparatorView from '../../../list/listseparatorview.js';
-import ListItemView from '../../../list/listitemview.js';
+import {
+	isDropdownMenuFocusableFlatItemView,
+	isDropdownMenuListItemView,
+	isDropdownMenuView
+} from '../guards.js';
 
 /**
  * Parser for dropdown menu definitions.
@@ -50,15 +50,11 @@ export class DropdownMenuDefinitionParser {
 	 * @param definition The dropdown menu factory definition.
 	 */
 	public appendMenus( { items }: DropdownMenuRootFactoryDefinition ): void {
-		const topLevelMenuViews = items.map( menuDefinition => {
-			const listItem = new DropdownMenuListItemView( this._view.locale! );
-
-			listItem.children.add(
-				this._registerMenuFromDefinition( menuDefinition )
-			);
-
-			return listItem;
-		} );
+		const topLevelMenuViews = items.map( menuDefinition => new DropdownMenuListItemView(
+			this._view.locale!,
+			null,
+			this._registerMenuFromDefinition( menuDefinition )
+		) );
 
 		this._view.items.addMany( topLevelMenuViews );
 	}
@@ -76,34 +72,27 @@ export class DropdownMenuDefinitionParser {
 		const { _view } = this;
 
 		const locale = _view.locale!;
-		const items = [];
-
-		for ( const menuGroupDefinition of groups ) {
-			for ( const itemDefinition of menuGroupDefinition.items ) {
-				const menuItemView = new DropdownMenuListItemView( locale, targetParentMenuView );
-
+		const items = groups.flatMap( ( menuGroupDefinition, index ) => {
+			const menuItems = menuGroupDefinition.items.map( itemDefinition => {
 				if ( isDropdownMenuDefinition( itemDefinition ) ) {
-					menuItemView.children.add(
+					return new DropdownMenuListItemView(
+						locale,
+						targetParentMenuView,
 						this._registerMenuFromDefinition( itemDefinition, targetParentMenuView )
 					);
-				} else {
-					const componentView = this._registerMenuTreeFromDefinition( itemDefinition, targetParentMenuView );
-
-					if ( !componentView ) {
-						continue;
-					}
-
-					menuItemView.children.add( componentView );
 				}
 
-				items.push( menuItemView );
-			}
+				return new DropdownMenuListItemView(
+					locale,
+					targetParentMenuView,
+					this._registerFromReusedInstance( itemDefinition, targetParentMenuView )
+				);
+			} );
 
-			// Separate groups with a separator.
-			if ( menuGroupDefinition !== last( groups ) ) {
-				items.push( new ListSeparatorView( locale ) );
-			}
-		}
+			const maybeSeparator = index !== groups.length - 1 ? [ new ListSeparatorView( locale ) ] : [];
+
+			return [ ...menuItems, ...maybeSeparator ];
+		} );
 
 		if ( items.length ) {
 			targetParentMenuView.listView.items.addMany( items );
@@ -135,42 +124,33 @@ export class DropdownMenuDefinitionParser {
 	/**
 	 * Registers a menu tree from the given component view definition.
 	 *
-	 * @param componentView The component view definition.
+	 * @param menuOrFlatItemView The component view definition.
 	 * @param parentMenuView The parent menu view.
 	 * @returns The registered component view.
 	 */
-	private _registerMenuTreeFromDefinition(
-		componentView: DropdownMenuViewItemDefinition,
+	private _registerFromReusedInstance(
+		menuOrFlatItemView: DropdownMenuOrFlatItemView,
 		parentMenuView: DropdownMenuView
 	) {
 		const { _view } = this;
 
-		if ( !( componentView instanceof DropdownMenuView ) ) {
-			componentView.delegate( 'mouseenter' ).to( parentMenuView );
+		if ( isDropdownMenuFocusableFlatItemView( menuOrFlatItemView ) ) {
+			menuOrFlatItemView.delegate( 'mouseenter' ).to( parentMenuView );
 
-			return componentView;
+			return menuOrFlatItemView;
 		}
 
-		_view.registerMenu( componentView, parentMenuView );
+		_view.registerMenu( menuOrFlatItemView, parentMenuView );
 
-		const menuBarItemsList = componentView.panelView.children
-			.filter( child => child instanceof DropdownMenuListView )[ 0 ] as DropdownMenuListView | undefined;
+		menuOrFlatItemView.nestedMenuListItems.forEach( menuListItem => {
+			if ( isDropdownMenuListItemView( menuListItem ) && isDropdownMenuView( menuListItem.flatItemOrNestedMenuView ) ) {
+				this._registerFromReusedInstance(
+					menuListItem.flatItemOrNestedMenuView,
+					menuOrFlatItemView
+				);
+			}
+		} );
 
-		if ( !menuBarItemsList ) {
-			componentView.delegate( 'mouseenter' ).to( parentMenuView );
-
-			return componentView;
-		}
-
-		const nonSeparatorItems = menuBarItemsList.items.filter( item => item instanceof ListItemView ) as Array<ListItemView>;
-
-		for ( const item of nonSeparatorItems ) {
-			this._registerMenuTreeFromDefinition(
-				item.children.get( 0 ) as DropdownMenuView | DropdownMenuListItemButtonView,
-				componentView
-			);
-		}
-
-		return componentView;
+		return menuOrFlatItemView;
 	}
 }

@@ -7,10 +7,23 @@
  * @module ui/dropdown/menu/typings
  */
 
+import type ListSeparatorView from '../../list/listseparatorview.js';
 import type DropdownMenuListItemButtonView from './dropdownmenulistitembuttonview.js';
+import type DropdownMenuView from './dropdownmenuview.js';
+import type { DropdownMenuListItemView } from './dropdownmenulistitemview.js';
 
 /**
- * Represents a view for a flat item in a dropdown menu.
- * This view is used for rendering a list item button in the dropdown menu.
+ * Represents a focusable flat item view in a dropdown menu.
  */
-export type DropdownMenuFlatItemView = DropdownMenuListItemButtonView;
+export type DropdownMenuFocusableFlatItemView = DropdownMenuListItemButtonView;
+
+/**
+ * Represents the definition of a dropdown menu view item.
+ */
+export type DropdownMenuOrFlatItemView = DropdownMenuView | DropdownMenuFocusableFlatItemView;
+
+/**
+ * Represents a view for a nested menu list item in a dropdown menu.
+ * It can be either a `DropdownMenuListItemView` or a `ListSeparatorView`.
+ */
+export type DropdownNestedMenuListItemView = DropdownMenuListItemView | ListSeparatorView;
